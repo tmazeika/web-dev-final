@@ -1,13 +1,21 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+import { connect } from 'mongoose';
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { UserModel } from '../../api/db';
 
 interface Data {
-  name: string
+  email: string;
 }
 
-export default function handler(
+export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>,
 ) {
-  res.status(200).json({ name: 'John Doe' });
+  await connect(process.env.DB_URL ?? '');
+  const doc = new UserModel({
+    name: 'Bill',
+    email: 'bill@initech.com',
+    avatar: 'https://i.imgur.com/dM7Thhn.png',
+  });
+  await doc.save();
+  res.status(200).json({ email: doc.email });
 }
