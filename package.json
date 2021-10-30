@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "style": "prettier --write ."
+    "lint:fix": "next lint --fix",
+    "style": "prettier -c .",
+    "style:fix": "prettier -w ."
   },
   "dependencies": {
     "@emotion/react": "^11.5.0",

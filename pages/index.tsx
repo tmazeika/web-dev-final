@@ -1,10 +1,10 @@
-import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
 import type { NextPage } from 'next';
 import Layout from '../components/Layout';
 
 const Home: NextPage = () => (
   <Layout>
-    <Button variant='contained'>Hello, world!</Button>
+    <Typography variant="h3">Home</Typography>
   </Layout>
 );
 
