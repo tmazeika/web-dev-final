@@ -5,7 +5,7 @@ services:
     environment:
       DB_URL: mongodb://app:pass@db/fdc_dev?authSource=admin
     ports:
-    - "3000:3000"
+    - '3000:3000'
     volumes:
     - /app/.next/
     - /app/node_modules/
@@ -18,7 +18,7 @@ services:
       MONGO_INITDB_ROOT_USERNAME: app
       MONGO_INITDB_ROOT_PASSWORD: pass
     ports:
-    - "27017:27017"
+    - '27017:27017'
     volumes:
     - db:/data/db/
 volumes:
