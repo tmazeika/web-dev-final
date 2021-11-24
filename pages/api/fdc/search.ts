@@ -1,4 +1,5 @@
 import type { NextApiRequest } from 'next';
+import type { SearchResultFood } from '../../../api/fdcApi';
 import { searchFoods } from '../../../api/fdcApi';
 import type { ApiResponse } from '../../../types/apiResponse';
 import type { FdcSearchResponse } from '../../../types/fdcSearchResponse';
@@ -16,9 +17,34 @@ export default async function handler(
     count: searchRes.totalHits,
     page: searchRes.currentPage,
     pageCount: searchRes.totalPages,
-    results: searchRes.foods.map((food) => ({
-      id: food.fdcId,
-      description: food.description,
-    })),
+    results: searchRes.foods
+      .filter((food) => food.foodMeasures.length > 0)
+      .map((food) => {
+        const portion = food.foodMeasures[0];
+        const portionGrams = portion.gramWeight ?? 0;
+        return {
+          id: food.fdcId,
+          description: food.description,
+          portionName:
+            portion.disseminationText === 'Quantity not specified'
+              ? null
+              : portion.disseminationText,
+          portionGrams,
+          calories: getNutrientValue(food, 'Energy') * portionGrams,
+          carbs:
+            getNutrientValue(food, 'Carbohydrate, by difference') *
+            portionGrams,
+          sugar:
+            getNutrientValue(food, 'Sugars, total including NLEA') *
+            portionGrams,
+          fat: getNutrientValue(food, 'Total lipid (fat)') * portionGrams,
+          protein: getNutrientValue(food, 'Protein') * portionGrams,
+          fiber: getNutrientValue(food, 'Fiber, total dietary') * portionGrams,
+          all: food,
+        };
+      }),
   });
 }
+
+const getNutrientValue = (food: SearchResultFood, name: string): number =>
+  (food.foodNutrients.find((n) => n.nutrientName === name)?.value ?? 0) / 100;

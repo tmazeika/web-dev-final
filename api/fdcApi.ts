@@ -1,22 +1,27 @@
-interface SearchResult {
+export interface SearchResult {
   totalHits: number;
   currentPage: number;
   totalPages: number;
   foods: SearchResultFood[];
 }
 
-interface SearchResultFood {
+export interface SearchResultFood {
   fdcId: number;
   description: string;
-  foodNutrients: AbridgedFoodNutrient[];
-  brandOwner: string;
+  foodMeasures: FoodMeasure[];
+  foodNutrients: FoodNutrient[];
 }
 
-interface AbridgedFoodNutrient {
-  number: number;
-  name: string;
-  amount: number;
+export interface FoodMeasure {
+  disseminationText: string;
+  gramWeight: number;
+  rank: number;
+}
+
+export interface FoodNutrient {
+  nutrientName: string;
   unitName: string;
+  value: number;
 }
 
 export async function searchFoods(

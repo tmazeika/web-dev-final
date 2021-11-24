@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react';
-import type { FdcFoodSummary } from '../types/fdcFoodSummary';
 import type { FdcSearchResponse } from '../types/fdcSearchResponse';
 import useSearchQuery from './useSearchQuery';
 import useSignal from './useSignal';
 
-export default function useSearchResults(): [FdcFoodSummary[], boolean] {
+export default function useSearchResults(): [
+  FdcSearchResponse | null,
+  boolean,
+] {
   const signal = useSignal();
   const query = useSearchQuery();
-  const [results, setResults] = useState<FdcFoodSummary[]>([]);
+  const [results, setResults] = useState<FdcSearchResponse>();
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -23,7 +25,7 @@ export default function useSearchResults(): [FdcFoodSummary[], boolean] {
       )
         .then((res) => res.json())
         .then((res: FdcSearchResponse) => {
-          setResults(res.results);
+          setResults(res);
         })
         .catch((e) => {
           console.error(e);
@@ -34,5 +36,5 @@ export default function useSearchResults(): [FdcFoodSummary[], boolean] {
     }
   }, [query, signal]);
 
-  return [results, loading];
+  return [results ?? null, loading];
 }
