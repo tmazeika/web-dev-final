@@ -15,7 +15,7 @@ const Home: NextPage = () => {
         <Stack py={5} spacing={5}>
           <PrivacyPolicyAlert />
           <Typography variant="h2">Welcome to Cookbook</Typography>
-          <Typography variant="h5">
+          <Typography variant="h5" lineHeight={1.6}>
             Cookbook is a place to find popular food items and recommended foods
             by nutritionists. Search for foods above and favorite your best
             dishes!

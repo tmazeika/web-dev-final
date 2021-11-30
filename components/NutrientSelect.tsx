@@ -43,7 +43,7 @@ const NutrientSelect: FC<{
         onChange={onChange}
         input={<OutlinedInput label="Show nutrients" />}
         renderValue={(selected) => (
-          <Stack direction="row" gap={0.5} flexWrap="wrap">
+          <Stack direction="row" spacing={0.5} flexWrap="wrap">
             {selected.map((value) => (
               <Chip key={value} label={value} size="small" />
             ))}

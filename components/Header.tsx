@@ -1,6 +1,8 @@
+import MenuBookIcon from '@mui/icons-material/MenuBook';
 import AppBar from '@mui/material/AppBar';
 import Grid from '@mui/material/Grid';
 import MuiLink from '@mui/material/Link';
+import Stack from '@mui/material/Stack';
 import Toolbar from '@mui/material/Toolbar';
 import Link from 'next/link';
 import type { FC } from 'react';
@@ -15,7 +17,10 @@ const Header: FC = () => (
         <Grid item>
           <Link href="/" passHref>
             <MuiLink variant="h6" color="inherit" underline="none">
-              Cookbook
+              <Stack direction="row" gap={1} alignItems="center">
+                <MenuBookIcon />
+                Cookbook
+              </Stack>
             </MuiLink>
           </Link>
         </Grid>
