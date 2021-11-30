@@ -24,6 +24,8 @@ export interface FoodNutrient {
   value: number;
 }
 
+export const PAGE_SIZE = 50;
+
 export async function searchFoods(
   query: string,
   signal?: AbortSignal,
@@ -32,6 +34,7 @@ export async function searchFoods(
     `https://api.nal.usda.gov/fdc/v1/foods/search?${new URLSearchParams({
       query,
       dataType: 'Survey (FNDDS)',
+      pageSize: String(PAGE_SIZE),
       api_key: process.env.FDC_API_KEY ?? '',
     }).toString()}`,
     { signal },

@@ -1,4 +1,3 @@
-import Container from '@mui/material/Container';
 import CssBaseline from '@mui/material/CssBaseline';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Head from 'next/head';
@@ -20,7 +19,7 @@ const Layout: FC<PropsWithChildren<unknown>> = ({ children }) => (
     </Head>
     <CssBaseline />
     <Header />
-    <Container maxWidth="md">{children}</Container>
+    {children}
   </ThemeProvider>
 );
 
