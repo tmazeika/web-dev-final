@@ -9,6 +9,7 @@ const PrivacyPolicyAlert: FC = () => {
     'PrivacyPolicyAlert-show',
     true,
   );
+
   return !show ? null : (
     <Alert severity="info" onClose={() => setShow(false)}>
       Check out our{' '}

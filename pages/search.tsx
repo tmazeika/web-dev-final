@@ -1,3 +1,4 @@
+import Backdrop from '@mui/material/Backdrop';
 import Chip from '@mui/material/Chip';
 import CircularProgress from '@mui/material/CircularProgress';
 import Container from '@mui/material/Container';
@@ -5,6 +6,7 @@ import Divider from '@mui/material/Divider';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
+import Skeleton from '@mui/material/Skeleton';
 import Stack from '@mui/material/Stack';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
@@ -36,7 +38,15 @@ const Search: NextPage = () => {
     <Layout>
       <Container maxWidth="md">
         <Stack py={5}>
-          {loading && <CircularProgress />}
+          <Backdrop open={loading}>
+            <CircularProgress color="inherit" />
+          </Backdrop>
+          {loading && (
+            <Stack spacing={1}>
+              <Skeleton variant="text" animation="wave" />
+              <Skeleton variant="text" animation="wave" />
+            </Stack>
+          )}
           {!loading && results && (
             <>
               <Stack direction="row">
