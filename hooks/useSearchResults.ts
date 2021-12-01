@@ -27,9 +27,7 @@ export default function useSearchResults(): [
         .then((res: FdcSearchResponse) => {
           setResults(res);
         })
-        .catch((e) => {
-          console.error(e);
-        })
+        .catch(console.error)
         .finally(() => {
           setLoading(false);
         });

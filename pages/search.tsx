@@ -3,6 +3,7 @@ import Chip from '@mui/material/Chip';
 import CircularProgress from '@mui/material/CircularProgress';
 import Container from '@mui/material/Container';
 import Divider from '@mui/material/Divider';
+import MuiLink from '@mui/material/Link';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
@@ -11,6 +12,7 @@ import Stack from '@mui/material/Stack';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import type { NextPage } from 'next';
+import Link from 'next/link';
 import React, { useState } from 'react';
 import { PAGE_SIZE } from '../api/fdcApi';
 import Layout from '../components/Layout';
@@ -70,7 +72,17 @@ const Search: NextPage = () => {
                     <React.Fragment key={food.id}>
                       <ListItem>
                         <ListItemText
-                          primary={food.description}
+                          primary={
+                            <Link href={`/details?id=${food.id}`} passHref>
+                              <MuiLink
+                                variant="h5"
+                                color="inherit"
+                                underline="none"
+                              >
+                                {food.description}
+                              </MuiLink>
+                            </Link>
+                          }
                           secondary={
                             <>
                               Serving:{' '}
