@@ -50,7 +50,7 @@ const NutritionLabel: FC<{
   }, [firstPortion]);
 
   return (
-    <Stack spacing={2} maxWidth="20em">
+    <Stack spacing={2}>
       <Typography variant="h4">Nutrition Facts</Typography>
       <FormControl>
         <InputLabel id="nutrition-label-serving-size">Serving size</InputLabel>
@@ -140,8 +140,8 @@ const NutritionLabel: FC<{
           </TableBody>
         </Table>
       </TableContainer>
-      <Typography variant="h4">Inputs</Typography>
-      <List>
+      <Typography variant="h4">Input Foods</Typography>
+      <List disablePadding>
         {props.ingredients.map((ingredient) => (
           <React.Fragment key={ingredient.id}>
             {ingredient.fdcId !== null && (

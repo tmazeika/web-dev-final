@@ -21,7 +21,7 @@ const Details: NextPage = () => {
 
   return (
     <Layout>
-      <Container maxWidth="md">
+      <Container maxWidth="sm">
         <Stack py={5} spacing={2}>
           <Backdrop open={loading}>
             <CircularProgress color="inherit" />

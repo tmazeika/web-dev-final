@@ -9,7 +9,7 @@ import Layout from '../components/Layout';
 const Privacy: NextPage = () => (
   <Layout>
     <Container maxWidth="md">
-      <Stack py={5}>
+      <Stack py={5} spacing={2}>
         <Typography variant="h3">Privacy Policy</Typography>
         <Typography variant="caption">Last updated Nov 24, 2021</Typography>
         {/* the following is generated from https://www.termsfeed.com/privacy-policy-generator/ */}
@@ -43,8 +43,8 @@ const Privacy: NextPage = () => (
           </li>
           <li>
             <p>
-              <strong>Company</strong> (referred to as either &quot;the
-              Company&quot;, &quot;We&quot;, &quot;Us&quot; or &quot;Our&quot;
+              <strong>Company</strong> (referred to as either &apos;the
+              Company&apos;, &apos;We&apos;, &apos;Us&apos; or &apos;Our&apos;
               in this Agreement) refers to Cookbook.
             </p>
           </li>
@@ -136,7 +136,7 @@ const Privacy: NextPage = () => (
         <h3>Usage Data</h3>
         <p>Usage Data is collected automatically when using the Service.</p>
         <p>
-          Usage Data may include information such as Your Device&quot;s Internet
+          Usage Data may include information such as Your Device&apos;s Internet
           Protocol address (e.g. IP address), browser type, browser version, the
           pages of our Service that You visit, the time and date of Your visit,
           the time spent on those pages, unique device identifiers and other
@@ -178,8 +178,8 @@ const Privacy: NextPage = () => (
             information about Your preferences or Your activity on our Service.
             Flash Cookies are not managed by the same browser settings as those
             used for Browser Cookies. For more information on how You can delete
-            Flash Cookies, please read &quot;Where can I change the settings for
-            disabling, or deleting local shared objects?&quot; available at{' '}
+            Flash Cookies, please read &apos;Where can I change the settings for
+            disabling, or deleting local shared objects?&apos; available at{' '}
             <MuiLink
               href="https://helpx.adobe.com/flash-player/kb/disable-local-shared-objects-flash.html#main_Where_can_I_change_the_settings_for_disabling__or_deleting_local_shared_objects_"
               rel="external nofollow noopener noreferrer"
@@ -199,7 +199,7 @@ const Privacy: NextPage = () => (
           </li>
         </ul>
         <p>
-          Cookies can be &quot;Persistent&quot; or &quot;Session&quot; Cookies.
+          Cookies can be &apos;Persistent&apos; or &apos;Session&apos; Cookies.
           Persistent Cookies remain on Your personal computer or mobile device
           when You go offline, while Session Cookies are deleted as soon as You
           close Your web browser. You can learn more about cookies here:{' '}
@@ -292,7 +292,7 @@ const Privacy: NextPage = () => (
             <p>
               <strong>To contact You:</strong> To contact You by email,
               telephone calls, SMS, or other equivalent forms of electronic
-              communication, such as a mobile application&quot;s push
+              communication, such as a mobile application&apos;s push
               notifications regarding updates or informative communications
               related to the functionalities, products or contracted services,
               including the security updates, when necessary or reasonable for
@@ -392,7 +392,7 @@ const Privacy: NextPage = () => (
         <h2>Transfer of Your Personal Data</h2>
         <p>
           Your information, including Personal Data, is processed at the
-          Company&quot;s operating offices and in any other places where the
+          Company&apos;s operating offices and in any other places where the
           parties involved in the processing are located. It means that this
           information may be transferred to &ndash; and maintained on &ndash;
           computers located outside of Your state, province, country or other
@@ -449,7 +449,7 @@ const Privacy: NextPage = () => (
           acceptable means to protect Your Personal Data, We cannot guarantee
           its absolute security.
         </p>
-        <h1>Children&quot;s Privacy</h1>
+        <h1>Children&apos;s Privacy</h1>
         <p>
           Our Service does not address anyone under the age of 13. We do not
           knowingly collect personally identifiable information from anyone
@@ -462,14 +462,14 @@ const Privacy: NextPage = () => (
         <p>
           If We need to rely on consent as a legal basis for processing Your
           information and Your country requires consent from a parent, We may
-          require Your parent&quot;s consent before We collect and use that
+          require Your parent&apos;s consent before We collect and use that
           information.
         </p>
         <h1>Links to Other Websites</h1>
         <p>
           Our Service may contain links to other websites that are not operated
           by Us. If You click on a third party link, You will be directed to
-          that third party&quot;s site. We strongly advise You to review the
+          that third party&apos;s site. We strongly advise You to review the
           Privacy Policy of every site You visit.
         </p>
         <p>
@@ -484,7 +484,7 @@ const Privacy: NextPage = () => (
         <p>
           We will let You know via email and/or a prominent notice on Our
           Service, prior to the change becoming effective and update the
-          &quot;Last updated&quot; date at the top of this Privacy Policy.
+          &apos;Last updated&apos; date at the top of this Privacy Policy.
         </p>
         <p>
           You are advised to review this Privacy Policy periodically for any
