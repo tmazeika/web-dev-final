@@ -2,13 +2,14 @@ import Button from '@mui/material/Button';
 import MuiLink from '@mui/material/Link';
 import Snackbar from '@mui/material/Snackbar';
 import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import type { FC } from 'react';
 import React, { useState } from 'react';
 import useAuth from '../hooks/useAuth';
 
 const AuthButtons: FC = () => {
+  const router = useRouter();
   const [showLoggedOut, setShowLoggedOut] = useState(false);
   const auth = useAuth();
 
@@ -40,7 +41,17 @@ const AuthButtons: FC = () => {
         </>
       ) : (
         <>
-          <Typography variant="body2">{auth.user.name}</Typography>
+          <Button
+            variant="text"
+            color="inherit"
+            onClick={() => {
+              if (!auth.user.isAnonymous) {
+                void router.push(`/profile/${auth.user.id}`);
+              }
+            }}
+          >
+            {auth.user.name}
+          </Button>
           <Button onClick={logOut}>Log Out</Button>
         </>
       )}

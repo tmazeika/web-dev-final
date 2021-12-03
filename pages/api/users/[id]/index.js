@@ -34,19 +34,16 @@ export default async function handler(req, res) {
     id: user._id,
     name: getRandomName(user._id.toHexString()),
     role: user.nutritionistId === null ? 'foodie' : 'nutritionist',
+    isSelf,
     reviews,
     favorites: user.favoriteFdcFoods,
-    following: isSelf
-      ? user.followingIds.map((id) => ({
-          id,
-          name: getRandomName(id.toHexString()),
-        }))
-      : undefined,
-    followers: isSelf
-      ? user.followerIds.map((id) => ({
-          id,
-          name: getRandomName(id.toHexString()),
-        }))
-      : undefined,
+    following: user.followingIds.map((id) => ({
+      id,
+      name: getRandomName(id.toHexString()),
+    })),
+    followers: user.followerIds.map((id) => ({
+      id,
+      name: getRandomName(id.toHexString()),
+    })),
   });
 }

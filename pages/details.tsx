@@ -27,6 +27,7 @@ import useAuth from '../hooks/useAuth';
 import useDetailsId from '../hooks/useDetailsId';
 import useDetailsResult from '../hooks/useDetailsResult';
 import useIsNutritionist from '../hooks/useIsNutritionist';
+import useUserDetails from '../hooks/useUserDetails';
 import { pluralize } from '../util/lang';
 
 const SearchText = styled(Typography)(({ theme }) => ({
@@ -37,6 +38,7 @@ const Details: NextPage = () => {
   const [details, loading] = useDetailsResult();
   const router = useRouter();
   const auth = useAuth();
+  const thisUser = useUserDetails(auth.user.isAnonymous ? '' : auth.user.id);
   const fdcId = useDetailsId();
   const [isFavorite, setIsFavorite] = useState(false);
   const [isRatedGood, setIsRatedGood] = useState(false);
@@ -269,7 +271,15 @@ const Details: NextPage = () => {
                           <Chip
                             label={u.name}
                             onClick={() => {
-                              void router.push(`/profile/${u.userId}`);
+                              if (
+                                thisUser !== null &&
+                                thisUser.id === u.userId &&
+                                !auth.user.isAnonymous
+                              ) {
+                                void router.push(`/profile/${auth.user.id}`);
+                              } else {
+                                void router.push(`/profile/${u.userId}`);
+                              }
                             }}
                           />
                         </Grid>

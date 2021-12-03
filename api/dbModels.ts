@@ -6,6 +6,26 @@ export interface FdcFoodUser {
   name: string;
 }
 
+export interface UserDetails {
+  id: string;
+  name: string;
+  role: string;
+  isSelf: boolean;
+  reviews?: Review[];
+  favorites?: {
+    fdcId: string;
+    name: string;
+  }[];
+  following?: {
+    id: string;
+    name: string;
+  }[];
+  followers?: {
+    id: string;
+    name: string;
+  }[];
+}
+
 export interface FdcFoodUsers {
   favorites: FdcFoodUser[];
   good: FdcFoodUser[];
