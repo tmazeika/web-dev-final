@@ -36,6 +36,7 @@ const Details: NextPage = () => {
   const [isGoodSave, setIsGoodSave] = useState(false);
   const [isBadSave, setIsBadSave] = useState(false);
   const [isFollowing, setIsFollowing] = useState(false);
+  const [submittingEmail, setSubmittingEmail] = useState(false);
   const { set, ...form } = useForm({
     initialValues: {
       email: '',
@@ -47,12 +48,15 @@ const Details: NextPage = () => {
       }
     },
     async onSubmit(values) {
+      setSubmittingEmail(true);
       try {
         await auth.changeEmail(values.email, values.password);
       } catch (e) {
         setIsGoodSave(false);
         setIsBadSave(true);
         return;
+      } finally {
+        setSubmittingEmail(false);
       }
       setIsGoodSave(true);
       setIsBadSave(false);
@@ -162,7 +166,9 @@ const Details: NextPage = () => {
                   <Button
                     type="submit"
                     variant="contained"
-                    disabled={form.values.password.length === 0}
+                    disabled={
+                      form.values.password.length === 0 || submittingEmail
+                    }
                   >
                     Save
                   </Button>
