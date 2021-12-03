@@ -4,6 +4,7 @@ import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import Container from '@mui/material/Container';
 import Divider from '@mui/material/Divider';
+import IconButton from '@mui/material/IconButton';
 import Skeleton from '@mui/material/Skeleton';
 import Stack from '@mui/material/Stack';
 import { styled } from '@mui/material/styles';
@@ -16,6 +17,7 @@ import NutritionLabel from '../components/NutritionLabel';
 import useAuth from '../hooks/useAuth';
 import useDetailsId from '../hooks/useDetailsId';
 import useDetailsResult from '../hooks/useDetailsResult';
+import { pluralize } from '../util/lang';
 
 const SearchText = styled(Typography)(({ theme }) => ({
   color: theme.palette.primary.main,
@@ -72,22 +74,29 @@ const Details: NextPage = () => {
               <SearchText variant="h4">{details.description}</SearchText>
               <Typography display="flex" alignItems="center" gap={1}>
                 {isFavorite ? (
-                  <FavoriteIcon
-                    color="error"
-                    onClick={() => onFavorite(false)}
-                  />
+                  <IconButton onClick={() => onFavorite(false)}>
+                    <FavoriteIcon color="error" />
+                  </IconButton>
                 ) : (
                   <>
                     {auth.user.isAnonymous ? (
                       <Tooltip title="You must be logged in to favorite foods">
-                        <FavoriteBorderIcon onClick={() => onFavorite(true)} />
+                        <IconButton>
+                          <FavoriteBorderIcon />
+                        </IconButton>
                       </Tooltip>
                     ) : (
-                      <FavoriteBorderIcon onClick={() => onFavorite(true)} />
+                      <IconButton onClick={() => onFavorite(true)}>
+                        <FavoriteBorderIcon />
+                      </IconButton>
                     )}
                   </>
-                )}{' '}
-                {details.favorites + favoriteCountMod} favorites
+                )}
+                {pluralize(
+                  details.favorites + favoriteCountMod,
+                  'favorite',
+                  'favorites',
+                )}
               </Typography>
               <Divider />
               <NutritionLabel

@@ -20,7 +20,25 @@ export default async function handler(
   if (fdcFood !== null) {
     favorites = fdcFood.favorites;
   }
-  const foodRes = await getFoodDetails(id);
+  const foodRes: FoodResult =
+    fdcFood?.cache != null
+      ? (JSON.parse(fdcFood.cache) as FoodResult)
+      : await(async () => {
+          const details = await getFoodDetails(id);
+          if (fdcFood !== null) {
+            await FdcFoodModel.updateOne(
+              { fdcId: id },
+              { cache: JSON.stringify(details) },
+            );
+          } else {
+            await FdcFoodModel.create({
+              fdcId: id,
+              name: details.description,
+              cache: JSON.stringify(details),
+            });
+          }
+          return details;
+        })();
   res.status(200).json({
     id: foodRes.fdcId,
     description: foodRes.description,

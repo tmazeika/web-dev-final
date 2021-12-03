@@ -19,14 +19,18 @@ export const ReviewModel =
 export interface FdcFood {
   _id: ObjectId;
   fdcId: string;
+  name: string;
   favorites: number;
   reviews: Review[];
+  cache: string | null;
 }
 
 const fdcFoodSchema = new Schema<FdcFood>({
   fdcId: { type: String, required: true },
+  name: { type: String, required: true },
   favorites: { type: Number, default: 0, required: true },
   reviews: { type: [reviewSchema], default: [], required: true },
+  cache: { type: String, default: null, required: false },
 });
 
 export const FdcFoodModel =
