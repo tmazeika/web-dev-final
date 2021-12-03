@@ -62,7 +62,11 @@ export default async function handler(req, res) {
       if (good !== null) {
         await NutritionistModel.updateOne(
           { userId: user._id },
-          { $addToSet: { reviews: { fdcId, authorId: user._id, good } } },
+          {
+            $addToSet: {
+              reviews: { fdcId, name: fdcName, authorId: user._id, good },
+            },
+          },
         );
       }
       const fdcFood = await FdcFoodModel.findOne({ fdcId }).exec();

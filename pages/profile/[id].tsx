@@ -1,9 +1,20 @@
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
+import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import FastfoodIcon from '@mui/icons-material/Fastfood';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import LocalDiningIcon from '@mui/icons-material/LocalDining';
+import PersonPinIcon from '@mui/icons-material/PersonPin';
+import ThumbDownIcon from '@mui/icons-material/ThumbDown';
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import Alert from '@mui/material/Alert';
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import Chip from '@mui/material/Chip';
 import Container from '@mui/material/Container';
 import Divider from '@mui/material/Divider';
+import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Tooltip from '@mui/material/Tooltip';
@@ -21,8 +32,10 @@ const Details: NextPage = () => {
   const { id: userId } = router.query;
   const userDetails = useUserDetails(typeof userId === 'string' ? userId : '');
   const auth = useAuth();
+  const thisUser = useUserDetails(auth.user.isAnonymous ? '' : auth.user.id);
   const [isGoodSave, setIsGoodSave] = useState(false);
   const [isBadSave, setIsBadSave] = useState(false);
+  const [isFollowing, setIsFollowing] = useState(false);
   const { set, ...form } = useForm({
     initialValues: {
       email: '',
@@ -55,6 +68,29 @@ const Details: NextPage = () => {
     }
   }, [authName, set]);
 
+  useEffect(() => {
+    if (userDetails !== null && thisUser !== null) {
+      setIsFollowing(
+        userDetails.followers?.some((f) => f.id === thisUser.id) ?? false,
+      );
+    }
+  }, [userDetails, thisUser]);
+
+  const onFollow = (follow: boolean) => {
+    if (userDetails !== null) {
+      void fetch(`/api/users/${userDetails.id}/followers`, {
+        method: follow ? 'POST' : 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          followerId: auth.user.isAnonymous ? null : auth.user.id,
+        }),
+      });
+      setIsFollowing(follow);
+    }
+  };
+
   return (
     <Layout>
       <Container maxWidth="sm">
@@ -72,6 +108,23 @@ const Details: NextPage = () => {
                   <FastfoodIcon fontSize="large" color="primary" />
                 </Tooltip>
               )}
+              {!auth.user.isAnonymous && !userDetails.isSelf && (
+                <>
+                  {isFollowing ? (
+                    <Tooltip title={<>Following &ndash; click to unfollow</>}>
+                      <IconButton onClick={() => onFollow(false)}>
+                        <AddCircleIcon color="primary" />
+                      </IconButton>
+                    </Tooltip>
+                  ) : (
+                    <Tooltip title={<>Not following &ndash; click to follow</>}>
+                      <IconButton onClick={() => onFollow(true)}>
+                        <AddCircleOutlineIcon />
+                      </IconButton>
+                    </Tooltip>
+                  )}
+                </>
+              )}
             </Stack>
             <Divider />
             {isGoodSave && (
@@ -84,13 +137,8 @@ const Details: NextPage = () => {
                 Bad email or password.
               </Alert>
             )}
-            {!auth.user.isAnonymous && userDetails.isSelf ? (
-              <Stack
-                component="form"
-                spacing={3}
-                onSubmit={form.onSubmit}
-                alignItems="flex-start"
-              >
+            {!auth.user.isAnonymous && userDetails.isSelf && (
+              <Stack component="form" spacing={3} onSubmit={form.onSubmit}>
                 <Stack direction="row" alignItems="center" gap={2}>
                   <TextField
                     type="email"
@@ -119,9 +167,127 @@ const Details: NextPage = () => {
                     Save
                   </Button>
                 </Stack>
+                <Divider />
               </Stack>
-            ) : (
-              <></>
+            )}
+            <Typography variant="h5" display="flex" alignItems="center">
+              <PersonPinIcon />
+              <ArrowRightIcon />
+              Following
+            </Typography>
+            <Box display="flex" flexWrap="wrap" gap={1}>
+              {userDetails?.following?.map((u) => (
+                <Chip
+                  key={u.id}
+                  label={u.name}
+                  onClick={() => {
+                    if (
+                      thisUser !== null &&
+                      thisUser.id === u.id &&
+                      !auth.user.isAnonymous
+                    ) {
+                      void router.push(`/profile/${auth.user.id}`);
+                    } else {
+                      void router.push(`/profile/${u.id}`);
+                    }
+                  }}
+                />
+              ))}
+            </Box>
+            <Divider />
+            <Typography variant="h5" display="flex" alignItems="center">
+              <PersonPinIcon />
+              <ArrowLeftIcon />
+              Followers
+            </Typography>
+            <Box display="flex" flexWrap="wrap" gap={1}>
+              {userDetails?.followers?.map((u) => (
+                <Chip
+                  key={u.id}
+                  label={u.name}
+                  onClick={() => {
+                    if (
+                      thisUser !== null &&
+                      thisUser.id === u.id &&
+                      !auth.user.isAnonymous
+                    ) {
+                      void router.push(`/profile/${auth.user.id}`);
+                    } else {
+                      void router.push(`/profile/${u.id}`);
+                    }
+                  }}
+                />
+              ))}
+            </Box>
+            <Divider />
+            <Typography variant="h5" display="flex" alignItems="center" gap={3}>
+              <FavoriteIcon />
+              Favorites
+            </Typography>
+            <Box display="flex" flexWrap="wrap" gap={1}>
+              {userDetails?.favorites?.map((u) => (
+                <Chip
+                  key={u.fdcId}
+                  label={u.name}
+                  variant="outlined"
+                  onClick={() => {
+                    void router.push(`/details?id=${u.fdcId}`);
+                  }}
+                />
+              ))}
+            </Box>
+            <Divider />
+            {userDetails?.role === 'nutritionist' && (
+              <>
+                <Typography
+                  variant="h5"
+                  display="flex"
+                  alignItems="center"
+                  gap={3}
+                >
+                  <ThumbUpIcon />
+                  Recommendations
+                </Typography>
+                <Box display="flex" flexWrap="wrap" gap={1}>
+                  {userDetails?.reviews
+                    ?.filter((r) => r.good)
+                    .map((u) => (
+                      <Chip
+                        key={u.fdcId}
+                        label={u.name}
+                        variant="outlined"
+                        onClick={() => {
+                          void router.push(`/details?id=${u.fdcId}`);
+                        }}
+                      />
+                    ))}
+                </Box>
+                <Divider />
+                <Typography
+                  variant="h5"
+                  display="flex"
+                  alignItems="center"
+                  gap={3}
+                >
+                  <ThumbDownIcon />
+                  Disapprovals
+                </Typography>
+                <Box display="flex" flexWrap="wrap" gap={1}>
+                  {userDetails?.reviews
+                    ?.filter((r) => !r.good)
+                    .map((u) => (
+                      <Chip
+                        key={u.fdcId}
+                        label={u.name}
+                        variant="outlined"
+                        onClick={() => {
+                          void router.push(`/details?id=${u.fdcId}`);
+                        }}
+                      />
+                    ))}
+                </Box>
+                <Divider />
+              </>
             )}
           </Stack>
         )}

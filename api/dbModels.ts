@@ -6,24 +6,25 @@ export interface FdcFoodUser {
   name: string;
 }
 
+export interface FollowingFollower {
+  id: string;
+  name: string;
+}
+
+export interface Favorite {
+  fdcId: string;
+  name: string;
+}
+
 export interface UserDetails {
   id: string;
   name: string;
   role: string;
   isSelf: boolean;
   reviews?: Review[];
-  favorites?: {
-    fdcId: string;
-    name: string;
-  }[];
-  following?: {
-    id: string;
-    name: string;
-  }[];
-  followers?: {
-    id: string;
-    name: string;
-  }[];
+  favorites?: Favorite[];
+  following?: FollowingFollower[];
+  followers?: FollowingFollower[];
 }
 
 export interface FdcFoodUsers {
@@ -35,6 +36,7 @@ export interface FdcFoodUsers {
 export interface Review {
   _id: ObjectId;
   fdcId: string;
+  name: string;
   authorId: ObjectId;
   good: boolean;
 }
@@ -42,6 +44,7 @@ export interface Review {
 const reviewSchema = new Schema<Review>({
   fdcId: { type: String, required: true },
   authorId: { type: Schema.Types.ObjectId, required: true },
+  name: { type: String, required: true },
   good: { type: Boolean, required: true },
 });
 
