@@ -2,6 +2,8 @@ export interface FdcDetailsResponse {
   id: number;
   description: string;
   favorites: number;
+  goodReviews: number;
+  badReviews: number;
   portions: FdcPortion[];
   caloriesPerGram: number;
   carbsPerGram: number;

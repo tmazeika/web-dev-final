@@ -17,8 +17,12 @@ export default async function handler(
   await dbConnect();
   const fdcFood = await FdcFoodModel.findOne({ fdcId: id }).exec();
   let favorites = 0;
+  let goodReviews = 0;
+  let badReviews = 0;
   if (fdcFood !== null) {
     favorites = fdcFood.favorites;
+    goodReviews = fdcFood.goodReviews;
+    badReviews = fdcFood.badReviews;
   }
   const foodRes: FoodResult =
     fdcFood?.cache != null
@@ -43,6 +47,8 @@ export default async function handler(
     id: foodRes.fdcId,
     description: foodRes.description,
     favorites,
+    goodReviews,
+    badReviews,
     portions: foodRes.foodPortions.map((portion) => ({
       id: portion.id,
       name: portion.portionDescription,

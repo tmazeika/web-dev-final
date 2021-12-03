@@ -3,13 +3,15 @@ import { model, models, Schema } from 'mongoose';
 
 export interface Review {
   _id: ObjectId;
+  fdcId: string;
   authorId: ObjectId;
-  content: string;
+  good: boolean;
 }
 
 const reviewSchema = new Schema<Review>({
+  fdcId: { type: String, required: true },
   authorId: { type: Schema.Types.ObjectId, required: true },
-  content: { type: String, required: true },
+  good: { type: Boolean, required: true },
 });
 
 export const ReviewModel =
@@ -21,7 +23,8 @@ export interface FdcFood {
   fdcId: string;
   name: string;
   favorites: number;
-  reviews: Review[];
+  goodReviews: number;
+  badReviews: number;
   cache: string | null;
 }
 
@@ -29,7 +32,8 @@ const fdcFoodSchema = new Schema<FdcFood>({
   fdcId: { type: String, required: true },
   name: { type: String, required: true },
   favorites: { type: Number, default: 0, required: true },
-  reviews: { type: [reviewSchema], default: [], required: true },
+  goodReviews: { type: Number, default: 0, required: true },
+  badReviews: { type: Number, default: 0, required: true },
   cache: { type: String, default: null, required: false },
 });
 

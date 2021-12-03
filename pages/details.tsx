@@ -1,5 +1,9 @@
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import ThumbDownIcon from '@mui/icons-material/ThumbDown';
+import ThumbDownOutlinedIcon from '@mui/icons-material/ThumbDownOutlined';
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import Container from '@mui/material/Container';
@@ -17,6 +21,7 @@ import NutritionLabel from '../components/NutritionLabel';
 import useAuth from '../hooks/useAuth';
 import useDetailsId from '../hooks/useDetailsId';
 import useDetailsResult from '../hooks/useDetailsResult';
+import useIsNutritionist from '../hooks/useIsNutritionist';
 import { pluralize } from '../util/lang';
 
 const SearchText = styled(Typography)(({ theme }) => ({
@@ -28,16 +33,37 @@ const Details: NextPage = () => {
   const auth = useAuth();
   const fdcId = useDetailsId();
   const [isFavorite, setIsFavorite] = useState(false);
+  const [isRatedGood, setIsRatedGood] = useState(false);
+  const [isRatedBad, setIsRatedBad] = useState(false);
   const [favoriteCountMod, setFavoriteCountMod] = useState(0);
+  const [goodCountMod, setGoodCountMod] = useState(0);
+  const [badCountMod, setBadCountMod] = useState(0);
+  const isNutritionist = useIsNutritionist();
 
   useEffect(() => {
     if (auth.user.isAnonymous) {
       setIsFavorite(false);
+      setIsRatedGood(false);
+      setIsRatedBad(false);
     } else if (fdcId !== null) {
       void fetch(`/api/users/${auth.user.id}/favorites/${fdcId}`)
         .then((res) => res.json())
         .then((res: { isFavorite: boolean }) => {
           setIsFavorite(res.isFavorite);
+        });
+      void fetch(`/api/users/${auth.user.id}/reviews/${fdcId}`)
+        .then((res) => res.json())
+        .then((res: { good: boolean | null }) => {
+          if (res.good === true) {
+            setIsRatedGood(true);
+            setIsRatedBad(false);
+          } else if (res.good === false) {
+            setIsRatedGood(false);
+            setIsRatedBad(true);
+          } else {
+            setIsRatedGood(false);
+            setIsRatedBad(false);
+          }
         });
     }
   }, [auth.user, fdcId]);
@@ -53,6 +79,31 @@ const Details: NextPage = () => {
       });
       setIsFavorite(favorite);
       setFavoriteCountMod((n) => n + (favorite ? 1 : -1));
+    }
+  };
+
+  const onRate = async (good: boolean | null) => {
+    if (!auth.user.isAnonymous && fdcId !== null) {
+      await fetch(`/api/users/${auth.user.id}/reviews`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ fdcId, good }),
+      });
+      if (isRatedGood) {
+        setGoodCountMod((n) => n - 1);
+      } else if (isRatedBad) {
+        setBadCountMod((n) => n - 1);
+      }
+      if (good === true) {
+        setGoodCountMod((n) => n + 1);
+      }
+      if (good === false) {
+        setBadCountMod((n) => n + 1);
+      }
+      setIsRatedGood(good === true);
+      setIsRatedBad(good === false);
     }
   };
 
@@ -72,32 +123,78 @@ const Details: NextPage = () => {
           {!loading && details && (
             <>
               <SearchText variant="h4">{details.description}</SearchText>
-              <Typography display="flex" alignItems="center" gap={1}>
-                {isFavorite ? (
-                  <IconButton onClick={() => onFavorite(false)}>
-                    <FavoriteIcon color="error" />
-                  </IconButton>
-                ) : (
-                  <>
-                    {auth.user.isAnonymous ? (
-                      <Tooltip title="You must be logged in to favorite foods">
-                        <IconButton>
+              <Stack direction="row" spacing={3}>
+                <Typography display="flex" alignItems="center">
+                  {isFavorite ? (
+                    <IconButton onClick={() => onFavorite(false)}>
+                      <FavoriteIcon color="error" />
+                    </IconButton>
+                  ) : (
+                    <>
+                      {auth.user.isAnonymous ? (
+                        <Tooltip title="You must be logged in to favorite foods">
+                          <IconButton>
+                            <FavoriteBorderIcon />
+                          </IconButton>
+                        </Tooltip>
+                      ) : (
+                        <IconButton onClick={() => onFavorite(true)}>
                           <FavoriteBorderIcon />
                         </IconButton>
-                      </Tooltip>
-                    ) : (
-                      <IconButton onClick={() => onFavorite(true)}>
-                        <FavoriteBorderIcon />
+                      )}
+                    </>
+                  )}
+                  {pluralize(
+                    details.favorites + favoriteCountMod,
+                    'favorite',
+                    'favorites',
+                  )}
+                </Typography>
+                <Typography display="flex" alignItems="center">
+                  {auth.user.isAnonymous || !isNutritionist ? (
+                    <Tooltip title="You must be logged in as a nutritionist to review foods">
+                      <IconButton>
+                        <ThumbUpOutlinedIcon />
                       </IconButton>
-                    )}
-                  </>
-                )}
-                {pluralize(
-                  details.favorites + favoriteCountMod,
-                  'favorite',
-                  'favorites',
-                )}
-              </Typography>
+                    </Tooltip>
+                  ) : isRatedGood ? (
+                    <IconButton onClick={() => onRate(null)}>
+                      <ThumbUpIcon color="success" />
+                    </IconButton>
+                  ) : (
+                    <IconButton onClick={() => onRate(true)}>
+                      <ThumbUpOutlinedIcon />
+                    </IconButton>
+                  )}
+                  {pluralize(
+                    details.goodReviews + goodCountMod,
+                    'recommendation',
+                    'recommendations',
+                  )}
+                </Typography>
+                <Typography display="flex" alignItems="center">
+                  {auth.user.isAnonymous || !isNutritionist ? (
+                    <Tooltip title="You must be logged in as a nutritionist to review foods">
+                      <IconButton>
+                        <ThumbDownOutlinedIcon />
+                      </IconButton>
+                    </Tooltip>
+                  ) : isRatedBad ? (
+                    <IconButton onClick={() => onRate(null)}>
+                      <ThumbDownIcon color="error" />
+                    </IconButton>
+                  ) : (
+                    <IconButton onClick={() => onRate(false)}>
+                      <ThumbDownOutlinedIcon />
+                    </IconButton>
+                  )}
+                  {pluralize(
+                    details.badReviews + badCountMod,
+                    'disapproval',
+                    'disapprovals',
+                  )}
+                </Typography>
+              </Stack>
               <Divider />
               <NutritionLabel
                 portions={details.portions}
