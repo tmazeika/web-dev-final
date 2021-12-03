@@ -2,9 +2,9 @@ import {
   FdcFoodModel,
   NutritionistModel,
   UserModel,
-} from '../../../../../api/dbModels';
-import { dbConnect } from '../../../../../api/dbConnect';
-import { getFoodDetails } from '../../../../../api/fdcApi';
+} from '../../../../../apiUtils/dbModels';
+import { dbConnect } from '../../../../../apiUtils/dbConnect';
+import { getFoodDetails } from '../../../../../apiUtils/fdcApi';
 
 export default async function handler(req, res) {
   switch (req.method) {

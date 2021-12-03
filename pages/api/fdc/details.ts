@@ -1,8 +1,8 @@
 import type { NextApiRequest } from 'next';
-import { dbConnect } from '../../../api/dbConnect';
-import { FdcFoodModel } from '../../../api/dbModels';
-import type { FoodResult } from '../../../api/fdcApi';
-import { getFoodDetails } from '../../../api/fdcApi';
+import { dbConnect } from '../../../apiUtils/dbConnect';
+import { FdcFoodModel } from '../../../apiUtils/dbModels';
+import type { FoodResult } from '../../../apiUtils/fdcApi';
+import { getFoodDetails } from '../../../apiUtils/fdcApi';
 import type { ApiResponse } from '../../../types/apiResponse';
 import type { FdcDetailsResponse } from '../../../types/fdcDetailsResponse';
 

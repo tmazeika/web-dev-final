@@ -20,7 +20,7 @@ import Typography from '@mui/material/Typography';
 import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
-import type { FdcFoodUsers } from '../api/dbModels';
+import type { FdcFoodUsers } from '../apiUtils/dbModels';
 import Layout from '../components/Layout';
 import NutritionLabel from '../components/NutritionLabel';
 import useAuth from '../hooks/useAuth';

@@ -1,5 +1,5 @@
-import { dbConnect } from '../../api/dbConnect';
-import { FdcFoodModel } from '../../api/dbModels';
+import { dbConnect } from '../../apiUtils/dbConnect';
+import { FdcFoodModel } from '../../apiUtils/dbModels';
 
 export default async function handler(req, res) {
   if (req.method !== 'GET') {

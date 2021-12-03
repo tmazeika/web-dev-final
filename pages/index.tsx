@@ -11,7 +11,7 @@ import type { NextPage } from 'next';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import type { FdcFood } from '../api/dbModels';
+import type { FdcFood } from '../apiUtils/dbModels';
 import Layout from '../components/Layout';
 import PrivacyPolicyAlert from '../components/PrivacyPolicyAlert';
 import useAuth from '../hooks/useAuth';

@@ -1,5 +1,5 @@
-import { NutritionistModel, UserModel } from '../../../../api/dbModels';
-import { dbConnect } from '../../../../api/dbConnect';
+import { NutritionistModel, UserModel } from '../../../../apiUtils/dbModels';
+import { dbConnect } from '../../../../apiUtils/dbConnect';
 import { getRandomName } from '../../../../util/getRandomName';
 import { Types } from 'mongoose';
 

@@ -1,5 +1,5 @@
-import { UserModel } from '../../../../api/dbModels';
-import { dbConnect } from '../../../../api/dbConnect';
+import { UserModel } from '../../../../apiUtils/dbModels';
+import { dbConnect } from '../../../../apiUtils/dbConnect';
 import { Types } from 'mongoose';
 
 export default async function handler(req, res) {

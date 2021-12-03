@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import type { UserDetails } from '../api/dbModels';
+import type { UserDetails } from '../apiUtils/dbModels';
 
 export default function useUserDetails(id: string): UserDetails | null {
   const [details, setDetails] = useState<UserDetails>();

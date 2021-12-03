@@ -1,6 +1,6 @@
 import type { NextApiRequest } from 'next';
-import type { SearchResultFood } from '../../../api/fdcApi';
-import { searchFoods } from '../../../api/fdcApi';
+import type { SearchResultFood } from '../../../apiUtils/fdcApi';
+import { searchFoods } from '../../../apiUtils/fdcApi';
 import type { ApiResponse } from '../../../types/apiResponse';
 import type { FdcSearchResponse } from '../../../types/fdcSearchResponse';
 

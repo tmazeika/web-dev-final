@@ -14,7 +14,7 @@ import Typography from '@mui/material/Typography';
 import type { NextPage } from 'next';
 import Link from 'next/link';
 import React, { useState } from 'react';
-import { PAGE_SIZE } from '../api/fdcApi';
+import { PAGE_SIZE } from '../apiUtils/fdcApi';
 import Layout from '../components/Layout';
 import NutrientSelect from '../components/NutrientSelect';
 import useSearchQuery from '../hooks/useSearchQuery';
