@@ -1,6 +1,17 @@
 import type { Model, ObjectId } from 'mongoose';
 import { model, models, Schema } from 'mongoose';
 
+export interface FdcFoodUser {
+  userId: string;
+  name: string;
+}
+
+export interface FdcFoodUsers {
+  favorites: FdcFoodUser[];
+  good: FdcFoodUser[];
+  bad: FdcFoodUser[];
+}
+
 export interface Review {
   _id: ObjectId;
   fdcId: string;

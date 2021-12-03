@@ -5,9 +5,12 @@ import ThumbDownOutlinedIcon from '@mui/icons-material/ThumbDownOutlined';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import Backdrop from '@mui/material/Backdrop';
+import Button from '@mui/material/Button';
+import Chip from '@mui/material/Chip';
 import CircularProgress from '@mui/material/CircularProgress';
 import Container from '@mui/material/Container';
 import Divider from '@mui/material/Divider';
+import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import Skeleton from '@mui/material/Skeleton';
 import Stack from '@mui/material/Stack';
@@ -15,7 +18,9 @@ import { styled } from '@mui/material/styles';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import type { NextPage } from 'next';
+import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
+import type { FdcFoodUsers } from '../api/dbModels';
 import Layout from '../components/Layout';
 import NutritionLabel from '../components/NutritionLabel';
 import useAuth from '../hooks/useAuth';
@@ -30,6 +35,7 @@ const SearchText = styled(Typography)(({ theme }) => ({
 
 const Details: NextPage = () => {
   const [details, loading] = useDetailsResult();
+  const router = useRouter();
   const auth = useAuth();
   const fdcId = useDetailsId();
   const [isFavorite, setIsFavorite] = useState(false);
@@ -39,6 +45,22 @@ const Details: NextPage = () => {
   const [goodCountMod, setGoodCountMod] = useState(0);
   const [badCountMod, setBadCountMod] = useState(0);
   const isNutritionist = useIsNutritionist();
+  const [expandedUsers, setExpandedUsers] = useState<FdcFoodUsers>({
+    favorites: [],
+    good: [],
+    bad: [],
+  });
+  const [expandedType, setExpandedType] = useState<
+    'bad' | 'favorites' | 'good'
+  >();
+
+  useEffect(() => {
+    if (fdcId !== null) {
+      void fetch(`/api/fdc/${fdcId}`)
+        .then((res) => res.json())
+        .then((res: FdcFoodUsers) => setExpandedUsers(res));
+    }
+  }, [expandedType, fdcId]);
 
   useEffect(() => {
     if (auth.user.isAnonymous) {
@@ -107,6 +129,14 @@ const Details: NextPage = () => {
     }
   };
 
+  const onToggleExpanded = (t: 'bad' | 'favorites' | 'good') => {
+    if (expandedType === t) {
+      setExpandedType(undefined);
+    } else {
+      setExpandedType(t);
+    }
+  };
+
   return (
     <Layout>
       <Container maxWidth="sm">
@@ -144,11 +174,18 @@ const Details: NextPage = () => {
                       )}
                     </>
                   )}
-                  {pluralize(
-                    details.favorites + favoriteCountMod,
-                    'favorite',
-                    'favorites',
-                  )}
+                  <Button
+                    size="small"
+                    variant="text"
+                    color="inherit"
+                    onClick={() => onToggleExpanded('favorites')}
+                  >
+                    {pluralize(
+                      details.favorites + favoriteCountMod,
+                      'favorite',
+                      'favorites',
+                    )}
+                  </Button>
                 </Typography>
                 <Typography display="flex" alignItems="center">
                   {auth.user.isAnonymous || !isNutritionist ? (
@@ -166,11 +203,18 @@ const Details: NextPage = () => {
                       <ThumbUpOutlinedIcon />
                     </IconButton>
                   )}
-                  {pluralize(
-                    details.goodReviews + goodCountMod,
-                    'recommendation',
-                    'recommendations',
-                  )}
+                  <Button
+                    size="small"
+                    variant="text"
+                    color="inherit"
+                    onClick={() => onToggleExpanded('good')}
+                  >
+                    {pluralize(
+                      details.goodReviews + goodCountMod,
+                      'recommendation',
+                      'recommendations',
+                    )}
+                  </Button>
                 </Typography>
                 <Typography display="flex" alignItems="center">
                   {auth.user.isAnonymous || !isNutritionist ? (
@@ -188,14 +232,53 @@ const Details: NextPage = () => {
                       <ThumbDownOutlinedIcon />
                     </IconButton>
                   )}
-                  {pluralize(
-                    details.badReviews + badCountMod,
-                    'disapproval',
-                    'disapprovals',
-                  )}
+                  <Button
+                    size="small"
+                    variant="text"
+                    color="inherit"
+                    onClick={() => onToggleExpanded('bad')}
+                  >
+                    {pluralize(
+                      details.badReviews + badCountMod,
+                      'disapproval',
+                      'disapprovals',
+                    )}
+                  </Button>
                 </Typography>
               </Stack>
               <Divider />
+              {expandedType !== undefined && (
+                <>
+                  <Typography variant="subtitle2">
+                    Users that{' '}
+                    {expandedType === 'favorites'
+                      ? 'favor'
+                      : expandedType === 'good'
+                      ? 'recommend'
+                      : 'disapprove of'}{' '}
+                    this food item:
+                  </Typography>
+                  {expandedUsers[expandedType].length === 0 ? (
+                    <Typography variant="subtitle2" color={'secondary'}>
+                      Nobody yet... be the first!
+                    </Typography>
+                  ) : (
+                    <Grid container spacing={1}>
+                      {expandedUsers[expandedType].map((u) => (
+                        <Grid key={u.userId} item xs={3}>
+                          <Chip
+                            label={u.name}
+                            onClick={() => {
+                              void router.push(`/profile/${u.userId}`);
+                            }}
+                          />
+                        </Grid>
+                      ))}
+                    </Grid>
+                  )}
+                  <Divider />
+                </>
+              )}
               <NutritionLabel
                 portions={details.portions}
                 ingredients={details.ingredients}
