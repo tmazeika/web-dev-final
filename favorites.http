@@ -1,0 +1,6 @@
+POST http://localhost:3000/api/users/RroCCLgFFXQuLwrThJgzSNrCqAc2/favorites
+Content-Type: application/json
+
+{"fdcId": "1098576"}
+
+###

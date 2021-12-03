@@ -1,8 +1,14 @@
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
+import FormControl from '@mui/material/FormControl';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormLabel from '@mui/material/FormLabel';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
+import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
@@ -20,6 +26,7 @@ const Register: NextPage = () => {
       email: '',
       password: '',
       passwordConfirm: '',
+      role: 'foodie',
     },
     onValidate(values, errors) {
       if (values.email.length === 0) {
@@ -40,8 +47,15 @@ const Register: NextPage = () => {
     async onSubmit(values) {
       return auth
         .register(values.email, values.password)
-        .then(() => {
-          void router.push('/');
+        .then(async (id) => {
+          await fetch('/api/users', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ id, role: values.role }),
+          });
+          await router.push('/');
         })
         .catch(() => {
           setIsBadRegister(true);
@@ -85,6 +99,29 @@ const Register: NextPage = () => {
               error={form.errors.passwordConfirm !== undefined}
               helperText={form.errors.passwordConfirm}
             />
+            <FormControl component="fieldset">
+              <FormLabel component="legend">Role</FormLabel>
+              <RadioGroup
+                row
+                value={form.values.role}
+                onChange={(e) => form.set('role', e.target.value)}
+              >
+                <Tooltip title="Foodies can favorite foods">
+                  <FormControlLabel
+                    value="foodie"
+                    control={<Radio />}
+                    label="Foodie"
+                  />
+                </Tooltip>
+                <Tooltip title="Nutritionists can favorite and review foods">
+                  <FormControlLabel
+                    value="nutritionist"
+                    control={<Radio />}
+                    label="Nutritionist"
+                  />
+                </Tooltip>
+              </RadioGroup>
+            </FormControl>
             <Button type="submit">Create account</Button>
           </Stack>
         </Stack>

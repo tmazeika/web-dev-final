@@ -1,4 +1,6 @@
 import type { NextApiRequest } from 'next';
+import { dbConnect } from '../../../api/dbConnect';
+import { FdcFoodModel } from '../../../api/dbModels';
 import type { FoodResult } from '../../../api/fdcApi';
 import { getFoodDetails } from '../../../api/fdcApi';
 import type { ApiResponse } from '../../../types/apiResponse';
@@ -12,10 +14,17 @@ export default async function handler(
   if (id === null) {
     return res.status(400).json({ error: 'Invalid ID' });
   }
+  await dbConnect();
+  const fdcFood = await FdcFoodModel.findOne({ fdcId: id }).exec();
+  let favorites = 0;
+  if (fdcFood !== null) {
+    favorites = fdcFood.favorites;
+  }
   const foodRes = await getFoodDetails(id);
   res.status(200).json({
     id: foodRes.fdcId,
     description: foodRes.description,
+    favorites,
     portions: foodRes.foodPortions.map((portion) => ({
       id: portion.id,
       name: portion.portionDescription,

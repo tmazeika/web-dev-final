@@ -20,5 +20,5 @@
     "@typescript-eslint/sort-type-union-intersection-members": "error",
     "@typescript-eslint/strict-boolean-expressions": "error"
   },
-  "ignorePatterns": ["/next.config.js"]
+  "ignorePatterns": ["/next.config.js", "**/*.js", "**/*.jsx"]
 }

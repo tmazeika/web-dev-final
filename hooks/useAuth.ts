@@ -12,15 +12,16 @@ interface AuthHook {
   user:
     | {
         isAnonymous: false;
+        id: string;
         name: string;
       }
     | {
         isAnonymous: true;
       };
 
-  register(email: string, password: string): Promise<void>;
+  register(email: string, password: string): Promise<string>;
 
-  logIn(email: string, password: string): Promise<void>;
+  logIn(email: string, password: string): Promise<string>;
 
   logOut(): Promise<void>;
 }
@@ -32,9 +33,9 @@ export default function useAuth(): AuthHook {
     user: {
       isAnonymous: true,
     },
-    register(email: string, password: string): Promise<void> {
+    register(email: string, password: string): Promise<string> {
       return createUserWithEmailAndPassword(auth, email, password)
-        .then(() => undefined)
+        .then(({ user }) => user.uid)
         .catch((err) => {
           if (err instanceof FirebaseError) {
             console.warn(err.message);
@@ -42,9 +43,9 @@ export default function useAuth(): AuthHook {
           throw err;
         });
     },
-    logIn(email: string, password: string): Promise<void> {
+    logIn(email: string, password: string): Promise<string> {
       return signInWithEmailAndPassword(auth, email, password)
-        .then(() => undefined)
+        .then(({ user }) => user.uid)
         .catch((err) => {
           if (err instanceof FirebaseError) {
             console.warn(err.message);
@@ -65,6 +66,7 @@ export default function useAuth(): AuthHook {
             ...info,
             user: {
               isAnonymous: false,
+              id: user.uid,
               name: user.email ?? '',
             },
           }));
